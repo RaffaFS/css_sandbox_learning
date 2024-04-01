@@ -1,0 +1,220 @@
+// Position é a maneira mais clássica de posicionar elementos, antes de grid ou flexbox
+// Hoje em dia a propriedade ainda é utilizada mas de maneira diferente
+
+@use 'modules/reset.scss';
+@use 'modules/colors.scss';
+@use 'modules/font.scss';
+
+*{color: colors.$w;}
+
+body{
+    background: linear-gradient(180deg, rgba(20,20,20, 1), rgba(10,100,100, 1));
+    height: 2560px;
+
+    .container{
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+        //position: relative;
+
+        .title-box{
+            background-color: colors.$turquoise2;
+            max-width: 640px;
+            margin: 64px auto;
+            border-radius: 32px;
+
+            .title{
+                font-family: "Bungee Hairline", sans-serif;
+                font-size: font.$xBig;
+                text-shadow: 2px 2px 2px #222;
+            }
+        }
+
+        .elements-box{
+            height: 720px;
+            border: solid 8px colors.$turquoise3;
+            border-radius: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: baseline;
+            //position: relative;
+
+            .element{
+                height: 152px;
+                width: 152px;
+                margin: 28px;
+                border-radius: 16px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .number{
+                    font-size: font.$medium;
+                    text-shadow: 2px 2px 2px #222;
+                }
+            }
+
+            .element1, .element5, .element9{background-color: colors.$turquoise1;}
+            .element2, .element6, .element10{background-color: colors.$turquoise2;}
+            .element3, .element7, .element11{background-color: colors.$turquoise3;}
+            .element4, .element8, .element12{background-color: colors.$turquoise4;}
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////
+/// 
+/// A maneira certa de codar os itens abaixo seria dentro de seu elemento pai
+/// porém farei aqui abaixo separadamente para o melhor entendimento das
+/// propriedades e valores de position apenas
+/// 
+/// "position" aceita: "absolute", "relative", "fixed", "sticky" e "static"
+/// 
+/// STATIC é o valor padrão e um elemento assim não aceita "propriedades de posição"
+
+//EXEMPLO 1
+.element1{ 
+    //position: absolute;
+    //top: 0;
+    //left: 0;
+    //right: 0;
+    //bottom: 0;
+    //z-index: -1;
+    //opacity: .4;
+}
+
+////////////////
+//___ABSOLUTE___
+
+//1. Elementos com esse valor de position são "removidos do documento", nenhum espaço do documento é agora reservado para ele
+//2. Isso não quer dizer que ele não é mais programável, apenas não está mais no fluxo normal do layout
+
+//3. Para reposicioná-lo utilizamos, geralmente, "uma única", ou "uma por eixo", das propriedades: "top", "left", "right" e "bottom"
+//4. As propriedades recebem valor em "px" e, se utilizarmos mais de uma por eixo, as dimensões do elemento podem ser alteradas
+
+//   Experimente "descomentar" o position e depois uma direção de cada eixo ("0" é o valor do extremo inicial)
+
+
+////////////////
+//___RELATIVE___
+
+//1. Serve como uma "ancoragem" para os elementos com "absolute"
+//2. É aplicado em qualquer "elemento pai" ao menos um nível acima daquele elemento que possuir "absolute"
+
+//   Para entender melhor
+//3. Mantenha ativo o experimento do absolute citado acima e depois descomente o position: relative;  de ".container"
+//4. Observe o resultado e descomente agora o position: relative; de ".elements-box"
+//5. Agora descomente também o z-index no ".element1" e, mova um pouco ele e note que
+
+//6. A princípio, o elemento com absolute parece ter sido preso dentro do elemento com relative, porém,
+//7. Com valores negativos nas propriedades de posição, ele "sai dessa prisão", mas continua acorrentado/ancorado
+//8. Se mais de um "elemento pai" tiver relative, o elemento com absolute respeitará o mais próximo de si na hierarquia
+
+//9. Sem relative, o z-index colocaria o elemento de absolute atrás da página inteira
+//   agora ele o coloca atrás apenas dos elementos que estão dentro da box que usa "position: relative;"
+
+//NOTA: outros positions "com exceção de static" podem "cobrir" o papel de relative, porém, relative é o único que
+//      faz seu papel sem alterar outras propriedades do layout
+
+
+
+//---------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------//
+//-----------------------------------------------------------//
+//--------------------------------------//
+//------------------//
+
+
+
+//EXEMPLO 2
+.element1{
+    //position: relative;
+    //top: 0;
+    //left: 0;
+    //right: 0;
+    //bottom: 0;
+    //z-index: -1;
+    //opacity: .4;
+}
+
+////////////////
+//___RELATIVE___
+
+// Embora seja mais comum vermos "relative" ser usado da maneira descrita acima
+// Também podemos usá-lo quando queremos ter acesso as propriedades "top", "left", "right" e "bottom"
+// Mas desejamos manter o fluxo normal do layout
+
+// Brincando com o "EXEMPLO 2", vamos perceber que suas regras de posicionamento
+// estão vinculadas a sua própria posição original e não à uma box externa
+// Além disso, mesmo que o elemento mude de posição, seu espaço original continua reservado.
+
+// Essa propriedade é útil isoladamente para casos em que utilizar margin ou padding para posicionamento
+// podem acabar quebrando o layout
+
+
+
+//---------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------//
+//-----------------------------------------------------------//
+//--------------------------------------//
+//------------------//
+
+
+
+//EXEMPLO 3
+.element1{
+    //position: fixed;
+}
+
+/////////////
+//___FIXED___
+
+// Elementos com fixed se comportam de maneira muito similar a elementos com absolute
+// Estes e aqueles são removidos do fluxo normal do layout e tem acesso as mesmas propriedades
+
+// Porém, enquanto absolute se mantém imóvel na posição programada na page e some com a rolagem
+// "fixed" se mantém na posição programada, mas "fixo em relação à janela", ou seja
+// Ele acompanha a rolagem, se mantendo sempre fixo no mesmo lugar do display do dispositivo
+
+// Eu posso utilizar essa propriedade para botões ou mesmo headers ou footers que eu quero que
+// se mantenham sempre em vista, basta controlar seu tamanho com top/left/right/bottom
+// A criatividade é o limite
+
+
+
+//---------------------------------------------------------------------------------------------------//
+//------------------------------------------------------------------------------//
+//-----------------------------------------------------------//
+//--------------------------------------//
+//------------------//
+
+
+
+//EXEMPLO 4
+.element1{
+    //position: sticky;
+    //z-index: -1;
+    //top: 0;
+}
+
+/////////////
+//___FIXED___
+
+// Enquanto fixed é mais parecido com absolute, "sticky" é mais parecido com relative
+// Assim como fixed ele tem essa propriedade de acompanhar a rolagem
+// mas como relative, ele mantém seu espaço reservado na página, sem mudar o layout
+
+// Além disso, ele só acompanha a rolagem pela extensão da sua própria box/container/div
+
+// O de z-index vai definir se ele deve passar pela frente ou por tras de outros elementos
+// da mesma box que estiverem alinhados com ele no eixo "y"
+// O valor da propriedade top vai definir quando a rolagem começa
+
+//1. se "0",        começa quando o elemento encontrar o topo da viewport
+//2. se "100px",    começa "100px antes" do elemento encontrar o topo da viewport
+//3. se "-100px",   começa "100px depois" do elemento ter encontrado o topo da viewport
+
+// Com esse position eu posso ter elementos que parecem estáticos mas de repente
+// começam a acompanhar a rolagem por uma parte da page ou ainda, ter elementos escondidos
+// atrás de outros e que, conforme a página rola, eles aparecem e desaparecem

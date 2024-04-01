@@ -1,0 +1,80 @@
+@use 'modules/reset.scss';
+@use 'modules/colors.scss';
+@use 'modules/font.scss';
+
+@mixin btnBase(){
+    .btn{
+        font-family: "Kode Mono", monospace;
+        font-size: font.$medium;
+        padding: 4px 16px;
+        border-radius: 16px;
+        background-color: colors.$orange1_4;
+        border: solid 4px colors.$orange1;
+    }
+}
+
+*{color: colors.$w;}
+
+body{
+    background-color: colors.$blue2;
+
+    .container{
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+
+        .title-box{
+            margin: 64px 0;
+
+            .title{
+                font-size: font.$Big;
+                font-family: "Bungee Hairline", sans-serif;
+                letter-spacing: 36px;
+            }
+        }
+
+        .subtitle-box{
+            .subtitle{
+                font-size: font.$medium;
+                font-weight: 300;
+                margin-bottom: 16px;
+            }
+        }
+
+        .animations-box{
+            height: 360px;
+            border: solid 4px colors.$w;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+
+            @include btnBase();
+        }
+    }
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+/// 
+/// Outra maneira de trabalhar com a organização das animações é criar classes pré programadas
+/// e adicionar essas classes nos elementos HTML conforme a necessidade
+/// 
+
+// Primeiro vamos descrever os keyframes da animação
+@keyframes rotateY{
+    from{transform: rotateY(0deg)}
+    to{transform: rotateY(360deg)}
+}
+
+// Aqui descrevemos as classes que citei acima
+.animate--rotateY{animation-name: rotateY; animation-duration: 3s;}
+.animate--slow{animation-duration: 6s;}
+.animate--fast{animation-duration: 1s;}
+.animate--infinite{animation-iteration-count: infinite;}
+.animate--delay-5s{animation-delay: 5s;}
+
+// Agora basta colocar as classes nos elementos HTML
+// Essa prática é ótima para projetos onde temos muitos elementos animados
+// Pois diminui a reepetição de código

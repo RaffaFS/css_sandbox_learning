@@ -1,0 +1,124 @@
+// Flexbox é como chamamos uma box/div/container que está configurada com "display: flex;"
+// Automaticamente, cada elemento do html tem um display padrão, geralmente "inline" ou "block"
+// Ao optar por "flex" o que acontece é
+//1. são criados dois eixos, o principal (horizontal) e o secundário (vertical)
+//2. todos os itens dentro da determinada box serão posicionados no eixo principal
+//3. todos eles "perderão" as propriedades de seu display padrão, logo, poderão ser posicionados mais facilmente na box
+
+@use 'modules/reset';
+@use 'modules/colors';
+@use 'modules/font';
+
+@mixin itemConfig(){
+    .item{
+        border: solid 8px colors.$orange1;
+        background-color: colors.$orange3;
+        width: 150px;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+*{color: colors.$w}
+
+body{
+    background-color: colors.$orange4;
+
+    .container{
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+
+        .title-box{
+            margin: 32px auto;
+
+            .title{
+                font-size: font.$xBig;
+                font-family: "Bungee Hairline", sans-serif;
+            }
+        }
+
+        .flex-container{max-width: 768px; margin: 0 auto}
+
+        .flex-container1{
+            border: solid 8px colors.$orange2;
+            height: 480px;
+            margin-bottom: 32px;
+            display: flex;                              // Setando o display flex no container
+            //flex-direction: column;       // o valor column definirá o eixo secundário como principal, pode ser usado em menus laterais
+                                            // o efeito é que as propriedades que antes alterariam o eixo horizontal agora o fazem no vertical
+
+            justify-content: space-between;         // essa propriedade manipula o posicionamento dentro do eixo principal
+            align-items: end;                       // essa propriedade manipula o posicionamento dentro do eixo secundário
+                                            // retire do comentário o flex-direction acima para alterar o eixo e vizualizar
+                                            // a mudança sem alterar os valores dessas duas propriedades
+
+            // Os valores aceitos pela primeira propriedade são
+            // "center", "start ou flex-start", "end ou flex-end", "space-between", "space-around", "space-evenly",
+
+            // Já os valores aceitos pela segunda propriedade são
+            // "center", "start ou flex-start", "end ou flex-end", "stretch" e "baseline"
+
+            //align-items: baseline;                    // Desses valores o único nãoo vizualizávell tão facilmente é o baseline
+            //.item2{font-size: font.$Big;}             // Retire do comentário essas duas linhas de código para entender melhor
+                                                        // Esse valor alinhará não os itens, mas as baselines deles entre si
+            @include itemConfig()
+        }
+
+        .flex-container2{
+            border: solid 8px colors.$orange2;
+            height: 480px;
+            margin-bottom: 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+
+            .item1{
+                align-self: start;      // Esta propriedade é usada em um item para alterar seu posicionamento individualmente
+            }                           // Os valores aceitos são os mesmos de align-items
+
+            @include itemConfig()
+        }
+
+        .flex-container3{
+            border: solid 8px colors.$orange2;
+            height: 480px;
+            margin-bottom: 32px;
+            display: flex;
+            gap: 16px;                      //embora utilizemos mais a "margin" dos itens, a propriedade "gap" ainda funciona aqui
+            //flex-direction: column;
+            flex-wrap: wrap;                // Por padrão no display flex, a propriedade flex-wrap tem o valor "no-wrap"
+                                        // Isso faz os itens se apertarem para caber na mesma linha (apague a propriedade para entender)
+                                        // com o valor "wrap" definimos que esse "apertamento" deve ser evitado com a criação
+                                        // de uma nova linha de itens quando necessário, além disso, "desbloqueamos" uma nova propriedade:
+            
+            align-content: center;      // Após termos definido "flex-wrap: wrap;" liberamos para uso o "align-content"
+                                        // Note, essa propriedade não deve ser confundido com "align-items"
+                                        // "align-content" aceita os mesmos valores que justify-content, porém atua no eixo secundário
+
+            @include itemConfig()
+        }
+
+        .flex-container4{
+            border: solid 8px colors.$orange2;
+            height: 480px;
+            margin-bottom: 32px;
+            display: flex;
+            
+            .item3{flex-grow: 1;}       // Aplicar essa propriedade/valor em um item fará com que ele cresça enquanto houver espaço
+            .item1{flex-shrink: 10;}    // Aplicar essa propriedade em um item fará com que ele comece a "diminuir" antes dos outros
+                                        //  quando a tela for comprimida, a depender do valor descrito. Se o valor for 0
+                                        //  eu defino que tal item não pode diminuir de tamanho de jeito nenhum
+
+            // por fim, também temos a propriedade "order: ;" que procuramos não utilizar pois bagunça a programação da page
+            // essa propriedade vai dentro de um item (ou mais) individualmente e digamos que "redefine sua posição html"
+            // seu valor original é "0" para todos os itens, ou seja, se eu usar em um item, vou passar o valor
+            // de "-1" para que o item passe a ser o primeiro na ordem ou de "1" para que passe a ser o último
+
+            @include itemConfig()
+        }
+    }
+}

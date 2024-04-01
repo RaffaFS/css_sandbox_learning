@@ -1,0 +1,341 @@
+// Backgrounds serão mencionados sempre diretamente no css, apenas criaremos seu "espaço" no html
+// Abaixo criei alguns containers, vamos imaginar que cada um desses containers representa um "body" de páginas individuais
+
+@use 'modules/reset';
+@use 'modules/colors';
+@use 'modules/font';
+
+*{color: colors.$w;}
+
+body{
+    background-color: colors.$amber1;
+
+    .container{
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+
+        .title-box{
+            margin: 64px auto;
+
+            .title{
+                font-size: font.$Big;
+                font-family: "Bungee Hairline", sans-serif;
+            }
+        }
+
+        .background-box{
+            border: solid 4px colors.$amber4;
+            height: 640px;
+            width: 100%;
+            margin-bottom: 72px;
+            display: flex;
+            justify-content: center;
+
+            .content{
+                align-self: center;
+            }
+        }
+
+        ///////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        //
+        // Daqui pra cima são apenas estilizações básicas para podermos trabalhar com o aprendizado de background
+        // Vale também lembrar que backgrounds são apenas aplicados internamente à um elemento, ou seja
+        // Para alterar o "campo de amostragem" de um background, utilizamos height, width ou padding, não margin
+
+
+        .background-box1{
+            background-image: linear-gradient(90deg, rgba(0, 33, 77, 1), rgba(92, 14, 64, 1), rgba(161, 21, 63, .4));
+
+            // (Sempre que trabalhar com  linear-gradiente, utilize "background-image", não outras propriedades)          
+            
+            // "background-color" é uma maneira básica de adicionar cor ao nosso background, mas aqui está uma maneira mais personalizável
+            // Em background "linear-gradient" posso adicionar quantas cores eu quiser, experimente para ver.
+            // Além disso, o primeiro valor define em graus de inclinação a posição do degradê
+        }
+
+
+        // Para imagens, nossa melhor escolha são imagens que tenham por volta de 1200px de largura, retrato ou paisagem
+        // "Quanto maior a imagem, melhor", mas isso interfere no carregamento da nossa page
+
+        // Nesse exemplo estarei utilizando uma imagem horizontal com 1278px de largura
+        .background-box2{
+            background-color: rgb(92, 14, 64);
+            background-image: url(../img/background_horizontal.jpg);
+
+            // Esse é o posicionamento padrão de um background-image.
+            // além disso, fazemos o uso de background-color como backup para o caso não carregamento da imagem
+        }
+
+        // Aqui vamos ver alguns controles de background utilizados quando temos um background-image
+        .background-box3{
+            background-color: rgb(92, 14, 64);
+            background-image: url(../img/background_horizontal.jpg);
+
+            background-repeat: no-repeat;     // Valor original = "repeat", Aceita = "no-repeat", "repeat-x", "repeat-y"
+            background-size: cover;          // Valor original = tamanho da imagem, Aceita = "cover", "contain", "px"
+            background-position: center;    // Valor original = top left. Aceita = "left", "right", "top", "bottom", "center", "x% y%"
+            
+            // background-attachment: fixed;        // Esta é outra propriedade de controle do background, seu valor original
+                                                   // é "scroll", o que faz com que a imagem role junto com o conteúdo
+                                                  // Com "fixed", a imagem permanece fixa em relação à janela de visualização, ou seja,
+                                                 // a imagem não se move quando o usuário rola a página.
+
+
+            // Geralmente são essas as configs que vamos querer
+            // 1. "no-repeat" fará com que nossa imagem não se repita em qualquer eixo
+            // 2. "cover" fará com que nossa imagem se ajuste (se esticando ou se comprimindo)
+            //    de maneira a preencher todo o espaço de sua box ( geralmente tendo a imagem cortada em algum eixo)
+            // 3. "center" alinha o centro do background com o centro da box, garantindo que, 
+            //    mesmo que a imagem seja cortada, a parte mais relevante ainda será mostrada
+        }
+
+        .background-box4{
+            background-color: rgb(92, 14, 64);
+            background-image: url(../img/background_vertical.jpg);
+
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+
+            // Essa é uma cópia da box acima, porém, com uma imagem vertical entre no modo desenvolvedor do browser
+            // e aumente e diminua a tela para ver como cada imagem se comporta no mesmo caso
+        }
+
+        .background-box5{
+            background-color: rgb(92, 14, 64);
+            background-image: url(../img/background_vertical.jpg);
+
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+
+            // Voltemos a falar sobre "background-attachment: fixed;". Sua base já foi explicada acima, mas quero que você note
+        //1. Essa propriedade parece se comportar de maneira vizualmente diferente quando aplicada
+
+        //1.1. "no body da página", em que veremos a imagem completa, imóvel enquanto o conteúdo se move na rolagem
+        //1.2. "em uma box de tamanho reduzido", em que teremos um "efeito janela" onde diferentes partes da imagem 
+        //     são reveladas/descobertas de acordo com a rolagem/posição-da-janela.
+        }
+
+        .background-box6{
+            background-color: rgb(92, 14, 64);
+            background-image: url(../img/background_pattern.webp);
+
+            // Note que aqui temos um background funcional mesmo sem qualquer descrição de controles
+            // Por padrão, todos os nossos controles estão aqui com o "valor original" que citei mais acima
+            // E isso é perfeito para quando decidimos colocar um background estilo "padrão" ou "textura"
+
+            // Afinal, temos um melhor aproveitamento desse estilo de background ao escolher imagens pequenas
+            // e mais leves que podem ser repetidas de maneira contínua.
+        }
+
+        //--------------------------------------------------------------
+        //
+        //--------------------------------------------
+        //
+        //--------------------------
+        //
+        //------------
+
+
+        ///////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////////
+        //
+        // Daqui pra baixo vamos tratar um pouco sobre "Overlays" e outras técnicas de background
+        // Algumas vezes precisaremos de imagens mais escuras, ou de "fades" na imagem, para se mesclar à pagina
+        // Ao invés de editarmos a imagem, podemos dar um jeito nisso com overlays de cores no próprio css
+
+        .background-box7{
+            background-color: rgb(92, 14, 64);
+            background-image: url(../img/background_vertical.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            isolation: isolate;
+            // Defino position relative para que o "pseudo-elemento" de position absolute abaixo seja aplicado sobre essa box
+            // Defino também isolation: isolate; para que as "alterações vizuais" dessa box sejam isoladas do resto da página
+            // Explicarei melhor mais abaixo
+
+            // Criação do "pseudo-elemento"
+            &::before{
+                background-color: rgba(0, 0, 0, .6);                            
+                background-image: linear-gradient(0deg, #19150e, transparent);
+                position: absolute;
+                content: '';
+                inset: 0;
+                z-index: -1;
+
+                //1. background-color: rgba(r, g, b, opacity); é o overlay mais básico
+                //2. "linear-gradient" que já vimos antes pode ser aplicado junto da propriedade acima ou sozinho
+                //   geralmente utilizaremos: "deg, cor, transparent" ou "deg, cor, transparent, cor"
+                
+                //3. "content: '';" define um conteúdo existente, mesmo que nulo, 
+                //4. "inset: 0;" define uma posição existente
+                //   essas definições são necessárias para a aplicação correta do overlay
+
+                //5. Até então, sem o "z-index: -1;" tudo estaria funcionando, porém, o overlay também teria sido aplicado
+                //   sobre o meu texto, por isso o uso do z-index negativo aqui
+                //   Um outro detalhe importante é, isso só funciona corretamente graças também a definição de
+                //   "isolation: isolate;" na box original, pois ela cria um "contexto de empilhamento" separado
+
+                //   Sem o uso correto dessa propriedade, esse "overlay" seria lançado para trás de todo e qualquer elemento
+                //   dessa página, já com seu uso correto, ele vai para trás do conteúdo mas se mantém eem frente a imagem
+            }
+        }
+
+        .background-box8{
+            background-color: rgb(92, 14, 64, 1);                   // Nesse caso a background-color é opcional
+            position: relative;
+            isolation: isolate;
+            
+            &::before{
+                background-image: url(../img/background_vertical.jpg);
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center;
+                opacity: .4;
+                position: absolute;
+                content: '';
+                inset: 0;
+                z-index: -1;
+            }
+
+            // Essa é outra maneira de utilizar o pseudo-elemento no background, aqui eu diminuo a opacidade da própria imagem
+            // Sua configuração se dá em: fazer a menção da imagem e a definição dos valores dos controladores
+            // dentro do pseudo-elemento, da mesma maneira que se faria na box original
+            // mantendo também como já seriam as propriedades de position e demais propriedades do pseudo-elemento
+            // além de adicionar "opacity: .x;"
+        }
+
+        .background-box9{
+            background-image: url(../img/background_blob.svg);
+
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            border: none;
+
+            // Outra maneira simples porém interessante de se trabalhar com backgrounds
+            // é utilizando arquivos svg, são super leves e conseguimos encontrar vários
+            // geradores deles na interneet, como o haikei que usei aqui
+
+            // Além disso, em se tratar de SVG
+        }
+
+        .background-box9-2{
+            background-image: url(../img/background_blob.svg), url(../img/background_horizontal.jpg);
+
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            border: none;
+
+            // Além disso, em se tratar de SVG é uma boa oportunidade de demonstrar que
+            // Definir varios backgrounds dentro da mesma propriedade, deixando-os empilhados
+            // Depois, apenas organizamos melhor com os controladores de background
+        }
+
+        .background-box10{
+            background-color: rgb(173, 26, 61);
+            background-image: url(../img/background_layered_waves.svg);
+
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            border: none;
+            margin-bottom: 0;
+
+            // A partir daqui eu tirei o margin-bottom para fazer a ligação de um container no outro
+        }
+
+        .background-box11{
+            background-color: rgb(103, 7, 181);
+            background-image: url(../img/background_layered_steps.svg);
+
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            border: none;
+            margin-bottom: 0;
+        }
+
+        .background-box12{
+            background-color: rgb(103, 7, 181);
+            background-image: url(../img/background_layered_steps2.svg);
+
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            border: none;
+        }
+
+        .background-video-box{
+            // propriedades que todas as outras box já possuem (com exceção de position) 
+            // mas que decidi trazer separadamente para cá pela explicação
+            border: solid 4px colors.$amber4;
+            height: 640px;
+            width: 100%;
+            margin-bottom: 72px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+
+            // Veja que não precisamos de controladores de background, isso porque para fazer um video de background
+            // grande parte do código fica no próprio html.
+
+            //1. "border" e "margin" estão apenas por estarmos tratando de uma box isolada para exemplo
+            //2. "height" e "width" poderão ter valores em "vh" ou "vw" respectivamente quando não nessa mesma box isolada
+            //3. "position: relative;" está para que o vídeo com "absolute" seja aplicado apenas aqui onde quero
+            //4. "overflow: hidden;" vai cortar/esconder as partes do vídeo que naturalmente escapavam da box
+            //5. "display: flex;" e o que vem depois é por conta do posicionamento do conteúdo apenas
+
+            .content{align-self: center;}
+            .video-bg{
+                position: absolute;
+                z-index: -1;
+                height: 115%;
+
+                // Aqui defino "position: absolute;" como citado acima, e "z-index: -1;"
+                // para jogar o vídeo para trás do texto
+
+                // Outra coisa que pode acontecer mesmo após as configurações acima, é você não gostar
+                // do "tamanho final" do vídeo, por ele ser grande e ter muito da cena cortada ou
+                // por ele ser pequeno e deixar espaços em branco.
+
+                // Um truque meu "que parece funcionar" até então, é ajustar a "dimensão menor" do vídeo
+                // utilizando "%" até um ponto em que ele cubra todo o espaço desejado.
+            }
+        }
+
+        .background-video-box2{
+            // Aqui eu tenho uma cópia da box acima, mas com a adição de overlays
+            border: solid 4px colors.$amber4;
+            height: 640px;
+            width: 100%;
+            margin-bottom: 72px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+
+            background-color: rgba(0,0,0,.3);
+            // background-image: linear-gradient(45deg, rgba(51, 109, 171, .6), rgba(245, 160, 135, .4));
+
+            // Além das combinações de cores, aqui também podemos combinar os dois overlays, ou manter apenas um e,
+            // ainda, ter cada cor rgba com opacidades diferentes conforme a criatividade e/ou necessidade
+
+            .content{align-self: center;}
+            .video-bg{
+                position: absolute;
+                z-index: -1;
+                height: 115%;
+            }
+        }
+    }
+}

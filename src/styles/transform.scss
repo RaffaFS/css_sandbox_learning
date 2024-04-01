@@ -1,0 +1,331 @@
+// Transform ou "Transformations" é como designamos o conjunto de controles que nos permite
+// Alterar visualmente as proporções e posições de um elemento do layout
+// Usamos muito essas propriedades durante transitions com pseudo-classes
+
+@use 'modules/reset.scss';
+@use 'modules/colors.scss';
+@use 'modules/font.scss';
+
+*{color: colors.$w;}
+
+body{
+    background-color: colors.$darkgreen2;
+
+    .container{
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+
+        .title-box{
+            margin: 64px 0;
+
+            .title{
+                font-size: font.$Big;
+                font-family: "Bungee Hairline", sans-serif;
+            }
+        }
+
+        .transform-box{
+            background-color: colors.$w;
+            border-radius: 32px;
+            height: 400px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+
+            .element-box{
+                background-color: colors.$darkgreen3;
+                height: 240px;
+                width: 240px;
+                border: 8px solid colors.$darkgreen1;
+                box-shadow: 2px 2px 8px #222;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                .text{
+                    font-size: font.$Big;
+                    text-shadow: 3px 3px 4px #111;
+                }
+            }
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+/// 
+/// Novamente, repito, essa não é a maneira correta de codar, mas vou colocar o transform
+/// aqui separado, pela didática
+/// 
+////////////////////////////////////////////////////////////////////////////////////////////
+
+.element1-box{
+    transform: translateX();        // reposiciona o elemento horizontalmente   (px)
+    transform: translateY();        // reposiciona o elemento verticalmente     (px)
+    transform: translate();         // reposiciona o elemento nos dois eixos    (px, px)
+
+                                    // não use X e Y separadamente se precisar dos dois valores
+                                    // E em translate, não esqueça da vírgula entre os valores
+                                    //
+
+    transform: rotateX();           // rotaciona o elemento em perspectiva no eixo X      (deg)
+    transform: rotateY();           // rotaciona o elemento em perspectiva no eixo Y      (deg)
+
+    transform: rotateZ();           // rotaciona o elemento como um volante no eixo Z     (deg)
+    transform: rotate();            // é a exata mesma propriedade de rotateZ();
+                                    //
+
+    transform: scaleX();            // redimensiona a largura de um elemento            (%)
+    transform: scaleY();            // redimensiona a altura de um elemento             (%)
+    transform: scale();             // redimensiona as duas medidas de um elemento      (%, %)
+
+                                    // os valores aceitos são referência ao original, então com "100%" nada se altera
+                                    // não use X e Y separadamente se precisar dos dois valores
+                                    // E em scale, não esqueça da vírgula entre os valores
+                                    //
+
+    transform: skewX();             // inclina o eixo X do objeto e mantéem o Y reto        (deg)
+    transform: skewY();             // inclina o eixo Y do objeto e mantéem o X reto        (deg)
+    transform: skew();              // inclina ambos os eixos de acordo com os valores      (deg)
+    
+
+    // matrix é uma transformação que engloba todas as acima e aceita os valores nas seguintes posições
+    // matrix(scaleX, skewX, skewY, scaleY, translateX, translateY);
+    
+    // transform: matrix(1,0,0,1,0,0);
+}
+
+
+// Aqui dois exemplos absurdos de como funcionariam alguns desses transforms em transições
+// Além disso note que no segundo exemplo tenho dois tipos de propriedade no mesmo transform
+// E no terceiro exemplo uso as propriedades sem a necessidade da palavra transform
+.element1-box{
+    &:hover{
+        transform: rotate(1440deg);
+    }
+    transition: all 3s;
+}
+
+.element2-box{
+    &:hover{
+        transform: skewX(20deg) scale(140%, 140%);
+    }
+    transition: all 3s;
+}
+
+.element3-box{
+    &:hover{
+            translate: -120px -20px;
+            rotate: 1 1 0 70deg;            // Ao usar rotate dessa maneira menciono 1 para os eixos que desejo rotacionar
+                                            // e 0 para os que não desejo rotacionar, depois defino os graus de rotação
+    }
+    perspective: 1000px;
+    transition: all 3s;
+}
+
+
+
+////////////////////////////////////////////////////////////////////////////////
+/// 
+/// Vamos conversar um pouco sobre 3D agora
+/// Antes de qualquer coisa, note no browser que, embora o primeiro exemplo 3d
+/// possa parecer girar para um lado diferente do segundo na maioria das vezes,
+/// na realidade todos estão girando para um mesmo lado
+/// isso se deve em parte por conta de que o primeiro não possui perspectiva definida
+/// e também por conta de sua seleção de cores, já que o segundo que também não
+/// possui perspectiva definida é fácil de entender para onde gira graças as cores
+
+.transform-box-3d{
+    margin: 64px auto;
+
+    .camadas{
+        transform-style: preserve-3d;       // O importante aqui são essas duas primeiras propriedades. "transform-style: preserve-3d;"
+        position: relative;                 // e "position: relative;" para que o 3d fique onde deve ficar, dentro da div nas regras dela
+        // perspective: 1000px;             // existe ainda a propriedade perspective, vou explica-lá mais abaixo
+        width: 200px;
+        height: 200px;
+        transition: all 3s;                 // transition eu adicionei só pela visualização do efeito de transição, assim como as opções
+                                            // de "&:hover". Caso não haja nececidade de efeito e a posição original já seja uma 
+                                            // representação 3D, não se faz necessário tal parte do código
+
+        .camada{
+            position: absolute;             // Aqui definimos o position para todas as camadas do nosso elemento 3D
+            width: 200px;                   // cada camada será um elemento diferente no html, todos no mesmo nível
+            height: 200px;                  // localizados dentro da classe "camadas"
+        }
+
+        .camada-fundo{background-color: rgb(1, 81, 33, 1); transform: translateZ(-100px);}
+        .camada-meio{background-color: rgb(1, 81, 33, .4);}
+        .camada-frente{background-color: rgb(1, 81, 33, .2); transform: translateZ(100px);}
+
+        &:hover{
+            rotate: 1 1 0 80deg;
+        }
+    }
+
+    .camadas2{
+        transform-style: preserve-3d;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        transition: all 3s;
+
+        .camada{
+            position: absolute;
+            width: 200px;
+            height: 200px;
+        }
+
+        .camada-fundo{background-color: rgb(1, 81, 33, .2); transform: translateZ(-100px);}
+        .camada-meio{background-color: rgb(1, 81, 33, .4);}
+        .camada-frente{background-color: rgb(1, 81, 33, 1); transform: translateZ(100px);}
+
+        &:hover{
+            rotate: 1 1 0 80deg;
+        }
+    }
+
+    //PERSPECTIVE
+    .camadas3{
+        transform-style: preserve-3d;
+        position: relative;
+        perspective: 1000px;            // O valor de "perspective" define o tamanho do campo de profundidade que poderá
+                                        // ser ocupado pelo elemento 3D e também como as medidas referentes ao eixo Z
+                                        // se comportam dentro desse campo
+
+                                        // Altere o valor de 1000px para 2000px e perceba como a distância entre as camadas
+                                        // fica menor, assim como a dimensão da camada de fundo e da de frente também são
+                                        // alteradas. Isso porque 200px é uma "10% de 2000" enquanto é "20% de 1000"
+        width: 200px;
+        height: 200px;
+        transition: all 3s;
+
+        .camada{
+            position: absolute;
+            width: 200px;
+            height: 200px;
+        }
+
+        .camada-fundo{background-color: rgb(1, 81, 33, 1); transform: translateZ(-200px);}
+        .camada-meio{background-color: rgb(1, 81, 33, .4);}
+        .camada-frente{background-color: rgb(1, 81, 33, .2); transform: translateZ(200px);}
+
+        &:hover{
+            rotate: 1 1 0 80deg;
+        }
+    }
+}
+
+.transform-box-cubo{
+    margin: 64px auto;
+
+    // Aqui temos a construção de um cubo com a construção e definição correta das propriedades de eixos
+    .lados-cubo1{
+        transform-style: preserve-3d;
+        position: relative;                         // Definição de preservar o 3d e da position relative
+        width: 200px;
+        height: 200px;
+        transition: all 12s;
+
+        .lado{
+            position: absolute;                     // position absolute para sobrepor todas as faces do meu cubo
+            width: 200px;
+            height: 200px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        ////////////////////
+        //
+        // Abaixo as configs separadas de cada face do cubo.
+        // É importante que o valor dos "translate" seja sempre o mesmo variando apenas em negativo e positivo
+        // Isso manterá um cubo em proporções "cúbicas" corretas
+        // Valores diferentes esticarão ou deformarão o cubo de alguma maneira
+        //
+        // "translate" com o valor da exata metade da dimensão do cubo, manteerão o cubo "fechado"
+        // se o valor não for a exata metade, as proporções cúbicas serão mantidas, mas p espaçamento alterado
+        // Vou trazer outros dois exemplos de demonstração
+
+        .frente{background-color: rgb(46, 178, 184, .6); transform: translateZ(100px)}
+        .trás{background-color: rgb(0, 119, 184, .6); transform: translateZ(-100px) rotateY(180deg)}
+        .cima{background-color: rgb(124, 11, 234, .6); transform: translateY(-100px) rotateX(90deg)}
+        .baixo{background-color: rgb(11, 46, 184, .6); transform: translateY(100px) rotateX(-90deg)}
+        .esquerda{background-color: rgb(200, 46, 184, .6); transform: translateX(-100px) rotateY(-90deg)}
+        .direita{background-color: rgb(11, 245, 184, .6); transform: translateX(100px) rotateY(90deg)}
+
+        //1.1 a face frontal e trazeira serão reposicionadas no eixo "Z", positiva e negativamente, respectivamente
+        //1.2 a face traseira precisa rotacionar 180deg no eixo "Y" para não ficar com a "real face" para dentro do cubo
+
+        //2. as faces de cima e baixo serão reposicionadas no eixo "Y" e irão rotacionar 90deg no eixo "X"
+        
+        //3. as faces de cima e baixo serão reposicionadas no eixo "X" e irão rotacionar 90deg no eixo "Y" 
+
+        &:hover{
+            transform: rotateX(720deg) rotateY(360deg);     // Na dúvida de como rotacionar as faces, é só fazer o
+        }                                                   // cubo inteiro rotacionar como fiz aqui para perceber
+    }
+
+
+    // Aqui um exemplo do cubo em boas proporções mas com o translate maior que a exata metade da dimensão da face
+    .lados-cubo2{
+        transform-style: preserve-3d;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        transition: all 12s;
+
+        .lado{
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .frente{background-color: rgb(46, 178, 184, .6); transform: translateZ(150px)}
+        .trás{background-color: rgb(0, 119, 184, .6); transform: translateZ(-150px) rotateY(180deg)}
+        .cima{background-color: rgb(124, 11, 234, .6); transform: translateY(-150px) rotateX(90deg)}
+        .baixo{background-color: rgb(11, 46, 184, .6); transform: translateY(150px) rotateX(-90deg)}
+        .esquerda{background-color: rgb(200, 46, 184, .6); transform: translateX(-150px) rotateY(-90deg)}
+        .direita{background-color: rgb(11, 245, 184, .6); transform: translateX(150px) rotateY(90deg)}
+
+        &:hover{
+            transform: rotateX(720deg) rotateY(360deg);
+        }
+    }
+
+    // Aqui um exemplo do cubo em boas proporções mas com o translate menor que a exata metade da dimensão da face
+    .lados-cubo3{
+        transform-style: preserve-3d;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        transition: all 12s;
+
+        .lado{
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .frente{background-color: rgb(46, 178, 184, .6); transform: translateZ(50px)}
+        .trás{background-color: rgb(0, 119, 184, .6); transform: translateZ(-50px) rotateY(180deg)}
+        .cima{background-color: rgb(124, 11, 234, .6); transform: translateY(-50px) rotateX(90deg)}
+        .baixo{background-color: rgb(11, 46, 184, .6); transform: translateY(50px) rotateX(-90deg)}
+        .esquerda{background-color: rgb(200, 46, 184, .6); transform: translateX(-50px) rotateY(-90deg)}
+        .direita{background-color: rgb(11, 245, 184, .6); transform: translateX(50px) rotateY(90deg)}
+
+        &:hover{
+            transform: rotateX(720deg) rotateY(360deg);
+        }
+    }
+}

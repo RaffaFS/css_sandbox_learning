@@ -1,0 +1,263 @@
+// Em relação às animações, temos dois tipos.
+// Transitions = esperam por algum tipo de mudança de propriedade no documento ou elemento para então ocorrerem
+// Animations = podem ter a interação do usuário mas não precisam disso, ocorrem de maneira automática como programado
+
+@use 'modules/reset.scss';
+@use 'modules/colors.scss';
+@use 'modules/font.scss';
+
+@mixin btnBase(){
+    font-family: "Kode Mono", monospace;
+    font-size: font.$medium;
+    padding: 4px 16px;
+    border-radius: 16px;
+}
+
+*{color: colors.$w;}
+
+body{
+    background-color: colors.$blue2;
+
+    .container{
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+
+        .title-box{
+            margin: 64px 0;
+
+            .title{
+                font-size: font.$Big;
+                font-family: "Bungee Hairline", sans-serif;
+                letter-spacing: 36px;
+            }
+        }
+
+        .subtitle-box{
+            .subtitle{
+                font-size: font.$medium;
+                font-weight: 300;
+                margin-bottom: 16px;
+            }
+
+            .animations{margin-top: 136px}
+        }
+
+        .transitions-box, .animations-box{
+            height: 360px;
+            border: solid 4px colors.$w;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+        .animations-box{
+            margin-bottom: 96px;
+        }
+
+        .box-button-pt2{
+            max-width: 280px;
+            margin: 0 auto 64px;
+            padding: 8px;
+            background-color: colors.$orange1_4;
+            border: solid 4px colors.$orange1;
+
+            &:hover{background-color: colors.$orange1}
+            transition: all .3s;
+            
+            .btn-pt2{
+                @include btnBase();
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+///
+/// Assim como no doc de position, não é a prática mais correta posicionar os elementos
+/// fora da matriz do código que está acima, mas vai ficar mais didático se separarmos por agora
+/// Além disso vale dizer que aqui trarei alguns exemplos de transition utilizando "transform" 
+/// que por si só é bastante amplo.
+/// 
+/// Mais de "transform" você encontra em outra parte desse documento
+/// 
+/// ////////////////////////////////////////////////////////////////////////////////////////////
+
+.transitions-box{
+
+    .btn1{
+        @include btnBase();
+        background-color: colors.$orange1_4;
+        border: solid 6px colors.$orange1;
+        
+        
+        // O hover já é bem conhecido e este transform coloca nosso botão 10px pra cima quando em hover
+        &:hover{
+            transform: translateY(-10px);
+        }
+
+        // Aqui começa a parte dos nossos controladores de transição
+
+        transition-property: transform;         // define sobre qual propriedade queremos aplicar o efeito de trasição
+        transition-duration: .3s;               // define o tempo que levará para a transição estar completa
+        transition-timing-function: ease;
+        transition-delay: 0s;                   // define se há um delay a partir do trigger antes do efeito começar
+
+        // Essa terceira propriedade define a "curva de aceleração do efeito", ela aceita 5 valores
+        //1. "linear" = o efeito não sofre variação de velocidade
+        //2. "ease-in" = devagar no começo e acelera pra linear
+        //3. "ease-out" = começa linear e freia no finalzinho
+        //4. "ease-in-out" = começa devagar, acelera, termina devagar
+        //5. "ease" = valor padrão, começa normal, acelera bastante, vai desacelerando
+    }
+
+
+    // Aqui temos uma outra maneira de descrever os 4 controladores de transition em uma única linha
+    .btn2{
+        @include btnBase();
+        background-color: colors.$orange1_4;
+        border: solid 6px colors.$orange1;
+
+        &:hover{
+            transform: translateY(-10px);
+        }
+
+        transition: transform .3s ease 0s;      // veja como fica muito melhor
+        // além disso, embora aqui eu vá deixar pela didática nesse caso o "ease" e "0s" são desnecessários
+        // pois cada um é o valor padrão da sua propriedade
+
+    }
+
+    .btn3{
+        @include btnBase();
+        color: colors.$b;
+        background-color: colors.$darkgreen2_4;
+        border: solid 6px colors.$darkgreen2;
+
+        // Note que aqui eu não tenho apenas a mudança de "transform", mas três no total
+        &:hover{
+            transform: translateY(-10px);
+            color: colors.$w;
+            background-color: colors.$darkgreen2;
+        }
+
+        // Logo, sou obrigado a descrever "todas" na regra de transition, fazemos com "all" então
+        // Que por si só já engloba todas as propriedades onde houveram modificações
+        transition: all .3s;
+    }
+
+    // Agora, no caso de eu ter mais de uma propriedade alterada e quiser valores diferentes para elas
+    // veja o exemplo abaixo
+    .btn4{
+        @include btnBase();
+        color: colors.$b;
+        background-color: colors.$darkgreen2_4;
+        border: solid 6px colors.$darkgreen2;
+
+        &:hover{
+            transform: translateY(-10px);
+            color: colors.$w;
+            background-color: colors.$darkgreen2;
+        }
+
+        transition: transform .3s, color .9s .2s, background-color .9s .2s;
+        // Nesse exemplo eu defino separadamente que
+        //1. a animação de transform deve acontecer em 0.3s
+        //2. as animações de color e background-color devem acontecer em 0.9
+        //3. as animações de color e background-color devem ter um delay de 0.2s
+        //   o que implica que irão iniciar apenas quando a animação de transform
+        //   já estiver quase acabando
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+///
+/// A partir daqui vamos começar a tratar das reais "animations", animações com keyframes
+/// 
+/// ////////////////////////////////////////////////////////////////////////////////////////////
+
+.animations-box{
+
+    .text-box1, .text-box2{
+        background-color: colors.$darkgreen2_4;
+        padding: 8px 16px;
+        border: solid 4px colors.$darkgreen2;
+    }
+}
+
+// A base de uma animação está na criação e definição dos keyframes
+// Faço o Set de "@keyframes" seguido pelo nome da animação
+// Existe mais de uma maneira de configurar keyframes
+
+///////////////////////////////////
+//
+//___MANEIRA 1___
+//
+
+@keyframes slideInLeft{
+    from{                       // from representa a animação em seu início, 0% completa, seu conteúdo serão as configs iniciais
+        transform: translateX(-600px);
+    }
+
+    to{                         // to representa a animação em seu fim, 100% completa, seu conteúdo serão as configs finais
+        transform: translateX(0);
+    }
+}
+
+    // Essa animação fará com que o que quer que seja animado com ela, 
+    // comece 600px à esquerda da sua posição original "(0)"
+    // e se desloque até a sua posição original. 
+    // Para configurarmos os detalhes, utilizamos alguns controladores
+    // dentro do elemento que queremos animar, assim:
+
+    // Alguns dos controladores abaixo já vimos no transition, a base é a mesma
+.text-box1{
+    animation-name: slideInLeft;          // Define qual animação queremos aplicar de acordo com os nomes dados
+    animation-duration: 5s;                 // Define o tempo de duração entre o começo e o final da animação
+    animation-timing-function: ease;        // Define a curva de aceleração da animação (se: "2 keyframes", mantemos o padrão)
+    animation-delay: 0s;                    // Define um tempo de delay antes da animação começar
+    animation-iteration-count: 1;           // Define quantas vezes a animação deve acontecer. "infinite" é um valor aceito
+    animation-direction: normal;            // Define a direção. "reverse" é também aceito e a animação acontece ao contrário
+    
+    animation-fill-mode: both;      // Define o estado do elemento pós e pré animação
+                                    // Digamos que algumass propriedades façam com que o estado original do elemento animado
+                                    // (cor, posição, tamanho...), não seja igual ao estado inicial, nem ao estado final da animação,
+
+                                    // "forwards"   fará com que ao fim da animação o elemento fique na posição final 
+                                    //              e não fará qualquer coisa em relação à posição inicial da animação
+                                    // "backwards"  fará com que antes do início da animação o elemento fique na posição
+                                    //              inicial proposta nela e não fará qualquer coisa em relação à posição
+                                    //              final da animação
+                                    // "both"       aplicará as afirmações positivas de ambas as regras acima
+                                    // "none"       fará com que antes da animação o elemento esteja em seu estado original e,
+                                    //              depois de completa, retorne ao seu estado original novamente
+}
+
+///////////////////////////////////
+//
+//___MANEIRA 2___
+//
+
+@keyframes slideInRight{
+    0%{transform: translateX(600px) rotate(0deg) }
+    15%{transform: translateX(450px) rotate(45deg)}
+    70%{transform: translateX(300px) rotate(0deg)}
+    90%{transform: translateX(150px) rotate(35deg)}
+    100%{transform: translateX(0px) rotate(0deg) }
+
+    // Veja que é graças aos vários keeyframes que consigo fazer a "rotação ir e voltar"
+    // Além disso, a não padronização da diferença entre os peercentuais dos keyframes
+    // faz com que hajam movimentos mais bruscos e outros mais sutis durante a animação
+}
+
+    // Claro, além de ser essa outra maneira de descrever os keyframes,
+    // para otimizar também tenho a opção de descrever todos os valores
+    // dos controladores citados acima, em um único controlador, veja abaixo:
+
+    // A ordem que os valores devem ser passados é a mesma ordem em que foram apresentados acima
+.text-box2{
+    //animation: slideInRight 5s ease 0s 1 normal both;     // descrição completa ou
+    animation: slideInRight 5s;                             // descrição omitindo os valores padrões
+}

@@ -1,0 +1,83 @@
+// Box-model é a definição dada ao conjunto "dimensão do conteúdo, padding, border e margin" de uma "box"
+// uma "div" ou "container", por exemplo
+
+@use 'modules/colors';
+@use 'modules/font';
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;                         // No reset sempre adicionamos box-sizing: border-box; 
+    font-family: "Roboto Condensed", sans-serif;    // O valor padrão é box-sizing: content-box;
+    color: colors.$grey1;                           // No valor padrão, "width" e "height" definirão o tamanho da área do conteúdo
+}                                                   // Com "border-box", "width" e "height" ajustarão o tamanho da área do conteúdo
+                                                    // definindo com os valores dados, o "conjunto" das áreas: conteúdo, padding e border
+body{
+    background-color: colors.$grey1;
+
+    .container{
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+
+        @media(max-width: 1024px){
+            width: 90%;
+        }
+
+        .title-box{
+            margin-top: 64px;
+            border: solid 16px colors.$grey3;
+            background-color: colors.$grey4;
+
+            .title{
+                font-family: "Bungee Hairline", sans-serif;
+                font-size: font.$Big;
+            }
+        }
+
+        .box-model{
+            font-size: font.$medium;
+            background-color: colors.$grey4;
+
+            //___BOX central___ (definição do espaço que pode ser ocupado pelo conteúdo)
+            max-width: 480px;
+            max-height: 240px;
+            width: 100%;
+            height: 100%;
+            //1. setar valores "max-" em px e valores "width e height" em %, tem duas grandes vantagens
+        //1.1.   até o valor de "max-", o espaçamento se ajustará de acordo com o conteúdo e configurações da página
+        //1.2.   temos um controle melhor de espaçamento em midia querys apenas alterando as "%" 
+
+
+            //___PADDING___ (espaçamento interno à "div" ou elemento)(background aplicável)(possuí "colisão")
+            padding: 32px 64px 96px 128px;
+            //1. o primeiro valor será o do padding-top, os demais seguirão em sentido horário
+
+            //2. adicionar um valor único o aplicará em todas as direções
+            //3. com dois valores, o primeiro será aplicado em "-top e -bottom" e o segundo em "-right e -left"
+            //4. com três valores, o primeiro será de "-top", o segundo de "-right e -left" e o terceiro de "-bottom"
+
+            //5. adicionando sufixos "-top", "-right", "-bottom" ou "-left" aplicarei o valor apenas na direção escolhida
+
+
+            //___BORDER___ (literalmente uma borda)(fica entre o padding e a margin)(precisa de 3 valores)
+            border: 16px solid colors.$grey3;
+            //1. o primeiro valor é a largura, o segundo é o "tipo" e o terceiro é a cor da borda
+            //2. os "tipos" são: solid, none, hidden, dotted, dashed, double, groove, ridge, inset e outset
+            //3. a ordem dos valores pode ser trocada sem alterar o resultado
+
+            //4. com os mesmos sufixos citados em padding, posso adicionar bordas em posições únicas
+            //5. com o sufixo "-radius", posso arredondar as bordas com valores de "px" ou "%"
+            border-radius: 24px;
+
+
+            //___MARGIN___ (espaçamento externo à "div" ou elemento)(background não aplicável)
+            margin: 64px auto;
+            //1. segue as mesmas regras de ordem valores e sufixos que o padding
+            //2. com a propriedade "auto" no segundo valor de um margin de uma box, centralizamos a mesma
+
+        }
+    }
+
+}

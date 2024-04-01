@@ -1,0 +1,357 @@
+// Grid é um valor programável da propriedade "display"
+// Enquanto "inline" dispõe nossos elementos na mesma linha "até onde couber" e "block" os posiciona um sobre o outro
+// Grid nos permite posicionar os elementos numa configuração de tabela, com "row" e "column"
+// De acordo com o número de "linhas" e "colunas" criadas, teremos um número x de células para posicionar os conteúdos
+
+@use 'modules/reset';
+@use 'modules/colors';
+@use 'modules/font';
+
+@mixin innerBoxConfig(){
+    .innerBox{
+        background-color: colors.$violet2;
+        border: solid 12px colors.$violet3;
+        display: flex;                              // Note que aqui eu estou definindo display: flex, dentro da célula
+        justify-content: center;                    // para posicionar centralmente apenas os números, fora disso, a minha tabela
+        align-items: center;                        // ainda existe e não houve mudança no posicionamento das células em si
+    }
+}
+
+*{color: colors.$w;}
+
+body{
+    background-color: colors.$violet1;
+
+    .container{
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+
+    @media (max-width: 768px){
+        width: 90%;
+        overflow-x: hidden;
+    }
+    
+        .title-box{
+            max-width: 640px;
+            margin: 64px auto;
+            border: solid 16px colors.$violet4;
+            border-radius: 70px;
+            background-color: colors.$violet1;
+
+
+            .title{
+                font-family: "Bungee Hairline", sans-serif;
+                font-size: font.$Big;
+            }
+        }
+
+        .grids-container{
+
+            .grid-box{border: solid 16px colors.$violet4; margin-top: 64px;}
+
+            .grid-box1{
+                display: grid;                              // Após definir display: grid, uso as propriedades "template" abaixo
+                // cada valor inserido aqui definirá a posição e a altura de uma nova linha que será criada
+                grid-template-rows: 100px 100px 100px;
+                // já aqui, cada valor definirá a posição e a largura da nova linha
+                grid-template-columns: 100px 100px 100px;
+                
+                // Note: temos 3 valores em cada propriedade "template", logo, teremos um grid 3x3
+                // Além disso, todos os valores são iguais, então, tanto nosso grid será um quadrado perfeito de 300px por 300px
+                // quanto cada célula também será de 100px por 100px
+
+                // gap adicionará um espaçamento geral para linhas e colunas
+                // e nesse caso irá redimensionar nosso grid para 316px por 316px, não alterando o tamanho das células
+                gap: 8px;
+                @include innerBoxConfig();  // esta é apenas a chamada do mixin no topo do código que faz o cess das células
+            }
+
+            /////////////////////////////////////////////////////////////////////////
+            //
+            // A base era aquela, vamos agora explorar um pouco mais!
+            // Veja, nenhum valor precisa ser igual ao outro na criação de um grid
+            // Vamos ver alguns exemplos
+            .grid-box2{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-template-rows: 100px 150px 100px;
+                grid-template-columns: 100px 100px 100px;
+                gap: 8px;           
+                @include innerBoxConfig();
+                // Aqui eu alterei o segundo valor de "rows", ou seja, todas as "células da SEGUNDA LINHA" terão outra dimensão de ALTURA
+            }
+
+            .grid-box3{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-template-rows: 100px 100px 100px;
+                grid-template-columns: 150px 100px 100px;
+                gap: 8px;           
+                @include innerBoxConfig();
+                // Aqui eu alterei o primeiro valor de "columns", ou seja, todas as "células da PRIMEIRA COLUNA" terão outra dimensão de LARGURA
+            }
+
+            .grid-box4{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-template-rows: 120px 150px 80px;          //120+150+80 = 350px
+                grid-template-columns: 80px 150px 120px;       //80+150+120 = 350px
+                gap: 8px;           
+                @include innerBoxConfig();
+                // Aqui eu alterei todos os valores de "rows" e "columns", assim, no grid notaremos algumas coisas:
+                // 1. Nosso grid continua sendo um quadrada perfeito, pois a dimensão total de rows e de columns é a mesma: 350px
+
+                // 2. Passamos a entender melhor como funciona o dimensionamento de uma célula
+            // 2.1. Cada célula utilizará um dos valores de "rows" e um dos valores de "columns", respectivos a sua posição,
+            //      para definir sua altura e largura, respectivamente. Ou seja...
+
+            // 2.2. A célula da linha 1 e coluna 1, tomará 120px como sua altura e 80px como sua largura
+            // 2.3. A célula da linha 2 e coluna 1, tomará 150px como sua altura e 80px como sua largura
+            // 2.4. A célula da linha 2 e coluna 2, tomará 150px como sua altura e 150px como sua largura
+            // 2.5. A célula da linha 3 e coluna 1, tomará 80px como sua altura e 80px como sua largura
+            // 2.6. A célula da linha 3 e coluna 3, tomará 80px como sua altura e 120px como sua largura
+            }
+
+            .grid-box5{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-template-rows: 100px 100px 100px;
+                grid-template-columns: 100px 100px 100px;
+                gap: 32px 8px;           
+                @include innerBoxConfig();
+                // Neste grid a única alteração do primeiro, foi em "gap", note que podemos setar dois valores
+                // Sendo o primeiro valor referente ao espaçamento entre linhas e o segundo o espaçamento entre colunas
+                // Para setar apenas um tipo de espaçamento, posso usar os prefixos "row-" e "column-"
+                // Ou setar o valor nulo como zero, por exemplo: "gap: 32px 0;"
+            }
+
+            /////////////////////////////////////////////////////////////////////////
+            //
+            // É importante notar que com as alterações acima, o que faço é mudar diretamente o tamanho das células
+            // Porém, posso manter uma tebela com células padrão e definir em cada item, quantas células ele deve cobrir
+            // Vamos ver alguns exemplos
+
+            .grid-boxEmpty{
+                border: solid 16px colors.$violet4;
+                border-radius: 16px;
+            }
+
+            .grid-box6{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-template-rows: 100px 100px 100px;
+                grid-template-columns: 100px 100px 100px 100px 100px 100px;
+                gap: 8px;
+                @include innerBoxConfig();
+
+                .innerBox1{
+                    grid-row-start: 1;
+                    grid-row-end: 3;
+                    grid-column-start: 2;
+                    grid-column-end: 5;
+
+                    // Observemos algumas coisas
+                //1. a innerBox1 vai iniciar na primeira linha e segunda coluna e terminar na terceira linha e quinta coluna
+                //2. ela não cobre a terceira linha ou a quinta coluna, mas sim, para ao se encontrar com elas
+
+                //3. a innerbox1 é o primeiro elemento dentro da grid-box6 no arquivo .html correspondente, e mesmo assim
+                //4. com essas configurações ela foi posicionada livremente entre os demais
+                }
+            }
+
+            .grid-box7{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-template-rows: 100px 100px 100px;
+                grid-template-columns: 100px 100px 100px 100px 100px 100px;
+                gap: 8px;
+                @include innerBoxConfig();
+
+                .innerBox1{
+                    grid-row: 1 / 3;
+                    grid-column: 2 / 5;
+
+                    // Aqui temos uma maneira mais curta de posicionar um item no grid
+                    // O primeiro valor de cada atributo é seu início e o segundo seu fim
+                    // O funcionamento se mantém o mesmo, mas nessa formatação os números são separados por "/"
+
+                // grid-area: 1 / 2 / 3 / 5; seria ainda outra maneira de passar o mesmo valor, em um único atributo
+
+                // Além disso, se o que me importa é o tamanho do item e não sua posição, posso usar "valores span"
+                // grid-row: span 3;        aqui digo que o item deve ocupar 3 linhas
+                // grid-column: span 2;     aqui digo que o item deve ocupar 2 colunas
+                // esse item poderá ser puxado ou empurrado de acordo com as disposição dos demais, mas manterá suas dimensões
+                }
+            }
+
+            /////////////////////////////////////////////////////////////////////////
+            //
+            // Sabendo agora dos atributos de posicionamento e seu funcionamento
+            // Podemos pensar também em sobrepor itens, é algo bem simples
+            // Basta posicionar dois ou mais itens de modo a ocuparem algumas das mesmas células desejadas
+            // E após isso definir quem fica por cima com "z-index: ;"
+
+            .grid-box8{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-template-rows: 100px 100px 100px;
+                grid-template-columns: 100px 100px 100px 100px 100px 100px;
+                gap: 8px;
+                @include innerBoxConfig();
+
+                .innerBox1{
+                    grid-row: 1 / 2;
+                    grid-column: 3 / 7;
+                    border: solid 8px colors.$green4;
+                    z-index: 1;
+                }
+                .innerBox2{
+                    grid-row: 1 / 4;
+                    grid-column: 1 / 5;
+                    border: solid 8px colors.$green3;
+                }
+                .innerBox3{
+                    grid-row: 1 / 3;
+                    grid-column: 2 / 5;
+                    border: solid 8px colors.$green1;
+                }
+
+                .innerBox8, .innerBox9{
+                    border: red solid 12px;
+                }
+
+                // Neste grid podemos notar algumas coisas
+            //1. posicionamos alguns itens sobrepostos e
+            //2. o primeiro item descrito no html será coberto pelo que é descrito depois e assim se segue
+            //3. para colocar o innerBox1 por cima dos demais, utilizamos o valor "1" no z-index
+
+            //4. os itens que não tiveram suas dimensoes citadas ocuparão uma célula cada e serão empurrados
+            //   de acordo com os itens que tiveram
+            //5. dois itens foram empurrados para fora do grid, isso nunca será desejável mesmo que possam ser modificados
+            }
+
+            .grid-box9{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-template-rows: 100px 100px 100px;
+                grid-template-columns: 100px 100px 100px 100px 100px 100px;
+                gap: 8px;
+                @include innerBoxConfig();
+                grid-auto-rows: 100px;                  //// Propriedade nova
+                //grid-auto-flow: column;
+                //grid-auto-columns: 220px;
+
+                .innerBox1{
+                    grid-row: 1 / 2;
+                    grid-column: 3 / 7;
+                    border: solid 8px colors.$green4;
+                    z-index: 1;
+                }
+                .innerBox2{
+                    grid-row: 1 / 4;
+                    grid-column: 1 / 5;
+                    border: solid 8px colors.$green3;
+                }
+                .innerBox3{
+                    grid-row: 1 / 3;
+                    grid-column: 2 / 5;
+                    border: solid 8px colors.$green1;
+                }
+
+                .innerBox8, .innerBox9{
+                    border: red solid 12px;
+                }
+
+                // Neste grid replicamos o último mas corrigimos os itens que estavam escapando do grid
+                // com o uso de "grid-auto-rows: 100px;" habilitei a criação automática de linhas para esses casos
+                // e disse que toda nova linha deve ter 100px de altura
+
+                // Caso quisesse que estes itens fossem empurrados para o lado, bastaria eu
+                //1. escrever a propriedade "grid-auto-flow: ;" com o valor "column" e
+                //2. trocar "grid-auto-rows" por "grid-auto-columns" com o valor desejado de largura
+            }
+
+            /////////////////////////////////////////////////////////////////////////
+            //
+            // Voltando lá à base novamente para 
+            // Vamos ver novamento propriedades de posicionamento sem sobreposição
+            .grid-box10{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-auto-rows: 100px;
+                grid-template-columns: 1fr 2fr 140px 1fr 1fr 1fr 4fr;
+                gap: 8px;           
+                @include innerBoxConfig();
+                // Com "fr (fraction)" eu faço com que as células se dividam em espaços calculados para preencher todo o grid
+                // se o número de "fractions" mencionadas para colunas for menor que o número de itens,
+                // os itens restantes vão para a linha de baixo
+
+                // Veja então, para essas regras podemos
+                //1. mencionar uma fraction por item
+                //2. mencionar a quantidade de fractions desejadas e ajustar manualmente a quantidade de linhas
+                //3. mencionar a quantidade de fractions desejadas e fazer o uso de "grid-auto-rows" 
+                //   sozinho (como no exemplo) ou, setando linhas iniciais com "grid-template-rows"
+
+                //4. As "columns" não tiram bom proveito de "fr"
+                //5. Mudar o número de um "fr" altera o tamanho da célula naquela posição
+                
+                //6. Podemos misturar valores fixos com valores variáveis como fractions
+                //   Se o grid for redimensionado, as células variáveis o acompanharão, as fixas manterão a dimensão setada
+            }
+
+            .grid-box11{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                height: 600px;
+                grid-template-rows: repeat(3, 100px);
+                grid-template-columns: repeat(3, 100px);
+                justify-content: space-around;
+                align-content: space-around;
+                @include innerBoxConfig();
+
+                // Utilizando "repeat" posso encurtar meu código passando apenas dois argumentos
+                // O primeiro argumento será o número de linhas ou colunas desejado, o segundo, seu tamanho
+
+                // Utilizando "justify-content" e "align-content" posso fazer o posicionamento geral das células dentro da div
+                // Coloquei um height de 600px só pra que isso pudesse ser melhor vizualizado
+
+                // também podemos utilizar "justify-items" ou "align-items"
+                // isso para o posicionamento dos itens dentro das células
+                // nesse caso os valores mais comuns serão "center, end, start e similares"
+            }
+
+            .grid-box12{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-template-rows: repeat(2, 100px);
+                grid-template-columns: repeat(6, minmax(100px, 1fr));
+                gap: 8px;
+                @include innerBoxConfig();
+
+                // Outra propriedade interessante é a "minmax", com ela defino os tamanhos minimo e máximo das células
+                // porém, dependendo do caso, sem um media query nosso layout pode quebrar, pra resolver isso temos um "truque"
+            }
+
+            .grid-box13{
+                border: solid 16px colors.$violet4;
+                display: grid;
+                grid-template-rows: repeat(2, 100px);
+                grid-template-columns: repeat(auto-fit, minmax(100px,1fr));
+                grid-auto-rows: 100px;
+                gap: 8px;           
+                @include innerBoxConfig();
+
+                // Nesse último grid temos um "truque" de responsividade sem a necessidade de utilizar um media query
+                // A base de atributos desse grid é a mesma do grid acima, as mudanças são
+
+                //1. o repeat das nossas columns que antes era 6, tem agora o valor de auto-fit
+                //   isso fará com que o número de colunas se ajuste automaticamente de forma a não quebrar o layout
+                //2. com o auto-fit em vigor, enquanto todas as células tiverem espaço para ter no mínimo 100px
+                //   elas continuarão na mesma linha, pensando nisso, adiciono o "grid-auto-rows", pois se o tamanho
+                //   mínimo for alterado, ou a "tela for comprimida", as últimas células serão empurradas para novas linhas
+            }
+        }
+    }
+}

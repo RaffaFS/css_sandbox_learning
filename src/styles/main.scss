@@ -1,0 +1,108 @@
+//  font-family: "Bungee Hairline", sans-serif;
+
+@use 'modules/reset';
+@use 'modules/colors';
+@use 'modules/font';
+
+*{color: colors.$w;}
+
+body{
+    background-color: colors.$green2;
+
+    .container{
+        max-width: 1280px;
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+
+        @media(max-width:1024px){
+            width: 90%;
+        }
+
+        .title-box{
+            background-color: colors.$green3;
+            font-size: font.$Big;
+            margin: 64px auto 64px;
+            border: solid 8px colors.$green1;
+            border-radius: 16px;
+            box-shadow: 0px 8px 4px #222;
+
+            .title{
+                font-family: "Bungee Hairline", sans-serif;
+                text-shadow: 0px 2px 1px #222;
+
+                @media(max-width:1024px){
+                    font-size: font.$Big;
+                    line-height: 80px;
+                }
+            }
+        }
+
+        .description-box{
+            background-color: colors.$green1;
+            text-align: justify;
+            padding: 24px;
+
+            .description{
+                font-size: font.$medium;
+
+                @media(max-width:1024px){
+                    font-size: font.$small;
+                }
+            }
+        }
+
+        .buttons-box{
+            margin-top: 32px;
+            display: flex;
+            justify-content: space-between;
+
+            @media(max-width:768px){
+                display: block;
+            }
+
+            .box-button{
+                @media(max-width:768px){
+                    margin-bottom: 16px;
+                }
+
+                .btn{
+                    font-size: font.$medium;
+                    font-family: "Bungee Hairline", sans-serif;
+                    font-weight: 700;
+                    padding: 0 16px;
+                    border-radius: 8px;
+                    box-shadow: 0px 2px 1px #333;
+                    text-decoration: none;
+                    text-shadow: 0px 2px 1px #333;
+    
+                    @media(max-width:1024px){
+                        font-size: font.$small;
+                        padding: 0 24px;
+                    }
+    
+                    @media(max-width:768px){
+                        padding: 0 64px;
+                    }
+    
+                    &:hover{
+                        filter: brightness(120%);
+                    }
+    
+                    &:active{
+                        box-shadow: 0px 0px 0px #333;
+                        box-shadow: inset 0px 2px 1px #333;
+                    }
+                }
+            }
+
+            .btn1{background-color: colors.$blue2;}
+            .btn2{background-color: colors.$amber1;}
+            .btn3{background-color: colors.$grey2;}
+            .btn4{background-color: colors.$violet2;}
+            .btn5{background-color: colors.$orange2;}
+            .btn6{background-color: colors.$turquoise2;}
+            .btn7{background-color: colors.$darkgreen3;}
+        }
+    }
+}
