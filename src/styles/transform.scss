@@ -103,6 +103,8 @@ body{
 .element1-box{
     &:hover{
         transform: rotate(1440deg);
+        transform-origin: top left;     // O valor padrão seria center, e faria o elemento girar como uma roda, orbitando seu
+                                        // próprio centro, mas com esse valor acontece o que você vê na tela
     }
     transition: all 3s;
 }
@@ -223,7 +225,8 @@ body{
     // Aqui temos a construção de um cubo com a construção e definição correta das propriedades de eixos
     .lados-cubo1{
         transform-style: preserve-3d;
-        position: relative;                         // Definição de preservar o 3d e da position relative
+        position: relative;                         // Definição de preservar o 3d e da position relative7
+        // perspective: 1000px;
         width: 200px;
         height: 200px;
         transition: all 12s;

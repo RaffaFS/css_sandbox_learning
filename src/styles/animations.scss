@@ -219,8 +219,9 @@ body{
     animation-timing-function: ease;        // Define a curva de aceleração da animação (se: "2 keyframes", mantemos o padrão)
     animation-delay: 0s;                    // Define um tempo de delay antes da animação começar
     animation-iteration-count: 1;           // Define quantas vezes a animação deve acontecer. "infinite" é um valor aceito
-    animation-direction: normal;            // Define a direção. "reverse" é também aceito e a animação acontece ao contrário
-    
+    animation-direction: normal;            // Define a direção. "reverse" é um valor aceito e a animação acontece ao contrário
+                                            //                   "alternate" é um valor aceito e a animação "vai e volta"
+
     animation-fill-mode: both;      // Define o estado do elemento pós e pré animação
                                     // Digamos que algumass propriedades façam com que o estado original do elemento animado
                                     // (cor, posição, tamanho...), não seja igual ao estado inicial, nem ao estado final da animação,
